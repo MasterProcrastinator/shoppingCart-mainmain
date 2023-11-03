@@ -12,6 +12,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let defaults = UserDefaults.standard
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+        if editingStyle == .delete {
+
+            self.list.remove(at: indexPath.row)
+
+            tableViewOutlet.reloadData()
+        }
+
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
