@@ -9,6 +9,11 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var checker = false
+    
+    let alert = UIAlertController(title: "Error", message: "Duplicate Found", preferredStyle: .alert)
+    
+    let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
     
     let defaults = UserDefaults.standard
     
@@ -16,7 +21,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         if editingStyle == .delete {
 
-            self.list.remove(at: indexPath.row)
+            list.remove(at: indexPath.row)
 
             tableViewOutlet.reloadData()
         }
@@ -51,13 +56,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         list = defaults.stringArray(forKey: "theList") ?? ["Item", "Item2", "Item3"]
         tableViewOutlet.delegate = self
         tableViewOutlet.dataSource = self
-        
+        alert.addAction(alertAction)
     }
 
     
     @IBAction func addAction(_ sender: UIButton) {
-        list.append(textFieldOutlet.text!)
+        for item in list{
+            if (item == textFieldOutlet.text!){
+                checker = true
+            }
+        }
         
+        if(checker == false){ list.append(textFieldOutlet.text!)
+        }
+        else{
+            present(alert, animated: true, completion: nil)
+        }
+        checker = false
         tableViewOutlet.reloadData()
     }
     
@@ -67,6 +82,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    @IBAction func sortAction(_ sender: UIButton) {
+        list = list.sorted{$0.localizedCompare($1) == .orderedAscending}
+        print(list)
+        tableViewOutlet.reloadData()
+        
+    }
     
     
     
